@@ -19,15 +19,23 @@ app.UseSwaggerUI();
 app.UseHttpsRedirection();
 
 app.MapGet("/AllNews", async (INewsRepository newsRepository) => await newsRepository.GetAllNews())
-.WithName("GetAllNews")
-.WithOpenApi();
+    .WithName("GetAllNews")
+    .WithOpenApi();
 
-app.MapGet("/NewsByDays", (int days,INewsRepository newsRepository) => newsRepository.GetNewsByDays(days))
+app.MapGet("/NewsByDays", async (int days,INewsRepository newsRepository) => await newsRepository.GetNewsByDays(days)!)
     .WithName("GetNewsByDays")
     .WithOpenApi();
 
-app.MapGet("/NewsByText", (string text, INewsRepository newsRepository) => newsRepository.GetNewsByText(text))
+app.MapGet("/NewsByText", async (string text, INewsRepository newsRepository) => await newsRepository.GetNewsByText(text))
     .WithName("GetNewsByText")
+    .WithOpenApi();
+
+app.MapGet("/Latest5News", async (INewsRepository newsRepository) => await newsRepository.GetLatest5News()!)
+    .WithName("GetLatest5News")
+    .WithOpenApi();
+
+app.MapPost("/Subscribe", (INewsRepository newsRepository) => newsRepository.Subscribe())
+    .WithName("Subscribe")
     .WithOpenApi();
 
 app.Run();

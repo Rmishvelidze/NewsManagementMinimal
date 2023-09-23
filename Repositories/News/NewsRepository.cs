@@ -38,18 +38,18 @@ namespace NewsManagementMinimal.Repositories.News
                 var feed = JsonConvert.DeserializeObject<Feed>(x);
                 if (feed != null) result.Add(new NewsDto(feed));
             });
-
             return Task.FromResult<List<NewsDto>?>(result!);
         }
 
-        public Task<List<NewsDto>> GetLatestNews()
+        public Task<List<NewsDto>?>? GetLatest5News()
         {
-            throw new NotImplementedException();
+            var newsDtos = _newsData.GetData().Result;
+            if (newsDtos == null) return null;
+            var result = newsDtos.OrderBy(x => x.Time_published).Take(5).ToList();
+            return Task.FromResult<List<NewsDto>?>(result);
         }
 
-        public Task Subscribe()
-        {
-            throw new NotImplementedException();
-        }
+        public string Subscribe() =>
+            "You successfully subscribe this chanel!";
     }
 }
