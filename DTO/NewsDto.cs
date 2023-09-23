@@ -1,5 +1,4 @@
 ﻿using NewsManagementMinimal.Models;
-using System;
 
 namespace NewsManagementMinimal.DTO
 {

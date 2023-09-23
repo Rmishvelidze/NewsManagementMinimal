@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using NewsManagementMinimal.DTO;
 using NewsManagementMinimal.Models;
 
@@ -8,22 +7,18 @@ namespace NewsManagementMinimal.Data
     public class NewsDataContext
     {
         private readonly IConfiguration _configuration;
-        //private readonly IMemoryCache _memoryCache;
+        private readonly IMemoryCache _memoryCache;
 
-        //public NewsDataContext(IConfiguration configuration, IMemoryCache memoryCache)
-        //{
-        //    _configuration = configuration;
-        //    _memoryCache = memoryCache;
-        //}
-
-        public NewsDataContext(IConfiguration configuration)
+        public NewsDataContext(IConfiguration configuration, IMemoryCache memoryCache)
         {
             _configuration = configuration;
+            _memoryCache = memoryCache;
         }
 
         public async Task<List<NewsDto>?> GetData()
         {
-            //var a = _memoryCache.Set();
+            if (_memoryCache.Get("DATA") != null)
+                return (List<NewsDto>?)_memoryCache.Get("DATA")!;
 
             List<NewsDto>? NewsDtos = new();
             using var httpClient = new HttpClient();
@@ -35,6 +30,7 @@ namespace NewsManagementMinimal.Data
             var news = Newtonsoft.Json.JsonConvert.DeserializeObject<News>(responseContent);
             news?.Feed.ForEach(x => NewsDtos.Add(new NewsDto(x)));
 
+            _memoryCache.Set("DATA", NewsDtos, TimeSpan.FromHours(1));
             return NewsDtos;
         }
     }
