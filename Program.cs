@@ -22,7 +22,9 @@ app.MapGet("/AllNews", async (INewsRepository newsRepository) => await newsRepos
 .WithName("GetAllNews")
 .WithOpenApi();
 
-
+app.MapGet("/NewsByDays", (int days,INewsRepository newsRepository) => newsRepository.GetNewsByDays(days))
+    .WithName("GetNewsByDays")
+    .WithOpenApi();
 
 
 app.Run();

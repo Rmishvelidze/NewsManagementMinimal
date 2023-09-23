@@ -14,9 +14,13 @@ namespace NewsManagementMinimal.Repositories.News
 
         public async Task<List<NewsDto>?> GetAllNews() => await _newsData.GetData();
 
-        public Task<List<NewsDto>> GetNewsByDays(int dayQuantity)
+        public Task<List<NewsDto>?>? GetNewsByDays(int daysQuantity)
         {
-            throw new NotImplementedException();
+            var targetDate = DateTime.Now.AddDays(-daysQuantity);
+            var newsDtos = _newsData.GetData().Result;
+            if (newsDtos == null) return null;
+            var result = newsDtos.Where(x => x.Time_published > targetDate).ToList();
+            return Task.FromResult<List<NewsDto>?>(result);
         }
 
         public Task<List<NewsDto>> GetNewsByText(string text)
