@@ -1,4 +1,5 @@
 using NewsManagementMinimal.Data;
+using NewsManagementMinimal.Repositories.News;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<NewsDataContext>();
+builder.Services.AddScoped<INewsRepository, NewsRepository>();
 
 var app = builder.Build();
 
@@ -14,7 +16,7 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-app.MapGet("/AllNews", async () => await new NewsDataContext(builder.Configuration).GetData())
+app.MapGet("/AllNews", async (INewsRepository newsRepository) => await newsRepository.GetAllNews())
 .WithName("GetAllNews")
 .WithOpenApi();
 
