@@ -1,5 +1,7 @@
 ﻿using NewsManagementMinimal.Data;
 using NewsManagementMinimal.DTO;
+using NewsManagementMinimal.Models;
+using Newtonsoft.Json;
 
 namespace NewsManagementMinimal.Repositories.News
 {
@@ -23,9 +25,21 @@ namespace NewsManagementMinimal.Repositories.News
             return Task.FromResult<List<NewsDto>?>(result);
         }
 
-        public Task<List<NewsDto>> GetNewsByText(string text)
+        public Task<List<NewsDto>?> GetNewsByText(string text)
         {
-            throw new NotImplementedException();
+            var newsDtos = _newsData.GetData().Result;
+            List<string> newsStrings = new();
+            List<NewsDto?> result = new();
+
+            newsDtos?.ForEach(x => newsStrings.Add(JsonConvert.SerializeObject(x)));
+            newsStrings.ForEach(x =>
+            {
+                if (!x.Contains(text)) return;
+                var feed = JsonConvert.DeserializeObject<Feed>(x);
+                if (feed != null) result.Add(new NewsDto(feed));
+            });
+
+            return Task.FromResult<List<NewsDto>?>(result!);
         }
 
         public Task<List<NewsDto>> GetLatestNews()

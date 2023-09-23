@@ -6,7 +6,7 @@ namespace NewsManagementMinimal.Repositories.News
     {
         Task<List<NewsDto>?> GetAllNews();
         Task<List<NewsDto>?>? GetNewsByDays(int daysQuantity);
-        Task<List<NewsDto>> GetNewsByText(string text);
+        Task<List<NewsDto>?> GetNewsByText(string text);
         Task<List<NewsDto>> GetLatestNews();
         Task Subscribe();
     }

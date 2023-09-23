@@ -26,5 +26,8 @@ app.MapGet("/NewsByDays", (int days,INewsRepository newsRepository) => newsRepos
     .WithName("GetNewsByDays")
     .WithOpenApi();
 
+app.MapGet("/NewsByText", (string text, INewsRepository newsRepository) => newsRepository.GetNewsByText(text))
+    .WithName("GetNewsByText")
+    .WithOpenApi();
 
 app.Run();
