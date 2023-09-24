@@ -1,4 +1,4 @@
-
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -83,23 +83,23 @@ app.MapGet("/AllNews",
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
         async (INewsRepository newsRepository) => await newsRepository.GetAllNews())
     .WithName("GetAllNews")
-    .WithOpenApi();
+    .Produces<string>();
 
 app.MapGet("/NewsByDays", async (int days,INewsRepository newsRepository) => await newsRepository.GetNewsByDays(days)!)
     .WithName("GetNewsByDays")
-    .WithOpenApi();
+    .Produces<string>();
 
 app.MapGet("/NewsByText", async (string text, INewsRepository newsRepository) => await newsRepository.GetNewsByText(text))
     .WithName("GetNewsByText")
-    .WithOpenApi();
+    .Produces<string>();
 
 app.MapGet("/Latest5News", async (INewsRepository newsRepository) => await newsRepository.GetLatest5News()!)
     .WithName("GetLatest5News")
-    .WithOpenApi();
+    .Produces<string>();
 
 app.MapPost("/Subscribe", (INewsRepository newsRepository) => newsRepository.Subscribe())
     .WithName("Subscribe")
-    .WithOpenApi();
+    .Produces<string>();
 
 
 IResult Login(UserLogin user, IUserRepository userRepo)
