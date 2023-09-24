@@ -58,5 +58,4 @@ public class CustomMiddleware
         var responseText = await new StreamReader(response.Body).ReadToEndAsync();
         _logger.LogInformation($"Response Text: {responseText}\n\n");
     }
-
 }

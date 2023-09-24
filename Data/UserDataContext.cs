@@ -6,9 +6,9 @@ namespace NewsManagementMinimal.Data
     {
         public static List<User?> Users = new()
         {
-            new() { Username = "Nana_admin", EmailAddress = "Nana.admin@email.com", Password = "123", GivenName = "Nana", Surname = "Bibileishvili", Role = "Administrator" },
-            new() { Username = "Megi_standard", EmailAddress = "Megi.standard@email.com", Password = "1234", GivenName = "Megi", Surname = "Shonia", Role = "Standard" },
-            new() { Username = "Rezi_standard", EmailAddress = "Rezi.standard@email.com", Password = "12345", GivenName = "Rezi", Surname = "Mishvelidze", Role = "Standard" },
+            new() { Username = "Rezo_admin", EmailAddress = "Rezo.admin@email.com", Password = "123", GivenName = "Rezo", Surname = "Mishvelidze", Role = "Administrator" },
+            new() { Username = "Maria_standard", EmailAddress = "Maria.standard@email.com", Password = "1234", GivenName = "Maria", Surname = "Smith", Role = "Standard" },
+            new() { Username = "Cristina_standard", EmailAddress = "Cristina.standard@email.com", Password = "12345", GivenName = "Cristina", Surname = "Ivanovna", Role = "Standard" },
         };
     }
 }

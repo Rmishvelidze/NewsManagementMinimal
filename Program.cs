@@ -85,7 +85,6 @@ app.UseAuthentication();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-//app.UseResponseCompression();
 app.UseMiddleware(typeof(CustomMiddleware));
 
 app.UseHttpsRedirection();
@@ -97,16 +96,20 @@ app.MapPost("/login",
     .Produces<string>();
 
 app.MapGet("/AllNews",
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
-        async (INewsRepository newsRepository) => await newsRepository.GetAllNews())
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Standard")]
+    async (INewsRepository newsRepository) => await newsRepository.GetAllNews())
     .WithName("GetAllNews")
     .Produces<string>();
 
-app.MapGet("/NewsByDays", async (int days, INewsRepository newsRepository) => await newsRepository.GetNewsByDays(days)!)
+app.MapGet("/NewsByDays",
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Standard")]
+async (int days, INewsRepository newsRepository) => await newsRepository.GetNewsByDays(days)!)
     .WithName("GetNewsByDays")
     .Produces<string>();
 
-app.MapGet("/NewsByText", async (string text, INewsRepository newsRepository) => await newsRepository.GetNewsByText(text))
+app.MapGet("/NewsByText",
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator,Standard")]
+    async (string text, INewsRepository newsRepository) => await newsRepository.GetNewsByText(text))
     .WithName("GetNewsByText")
     .Produces<string>();
 
@@ -114,7 +117,9 @@ app.MapGet("/Latest5News", async (INewsRepository newsRepository) => await newsR
     .WithName("GetLatest5News")
     .Produces<string>();
 
-app.MapPost("/Subscribe", (INewsRepository newsRepository) => newsRepository.Subscribe())
+app.MapPost("/Subscribe",
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+        (INewsRepository newsRepository) => newsRepository.Subscribe())
     .WithName("Subscribe")
     .Produces<string>();
 #endregion
@@ -143,7 +148,7 @@ IResult Login(UserLogin user, IUserRepository userRepo)
         issuer: builder.Configuration["Jwt:Issuer"],
         audience: builder.Configuration["Jwt:Audience"],
         claims: claims,
-        expires: DateTime.UtcNow.AddDays(1),
+        expires: DateTime.UtcNow.AddHours(1),
         notBefore: DateTime.UtcNow,
         signingCredentials: new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? string.Empty)),
@@ -151,6 +156,5 @@ IResult Login(UserLogin user, IUserRepository userRepo)
     );
 
     var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
     return Results.Ok(tokenString);
 }
